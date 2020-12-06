@@ -23,24 +23,6 @@ int main()
 {
 	int i = 0, total;
 	char  str[MAXCHAR];
-	FILE *of;
-	of = fopen("data_6.txt","w");	// opening the file
-
-	if(of == NULL){	// show error if file couldn't be opened
-		fprintf(stderr,"\nError to open the file\n");
-		exit(1);
-	}
-
-	printf("Enter number of students: \n");
-	scanf("%d" ,&total);
-	printf("Enter name of students according to roll numbers: \n");
-	while (total > 0){	
-    	scanf(" %[^\n]s", str);	// getting names as input
-    	fprintf(of, "%s\n", str); 	// writing them in the file
-    	--total;
-    }
-
-    fclose(of);	// closing the file
     
     FILE *fread;
     if((fread = fopen("data_6.txt","r")) == NULL)	// opening the file and checking if it has opened
@@ -53,17 +35,26 @@ int main()
     int min = INT;
     int max = 0;
     char temp[50];
+    char roll[20], hiphen[5];
+    char minname[50], maxname[50];
+	
    
 
-    while(fgets(name,sizeof(name),fread)!= NULL)	// getting all the names from the file
+    while(!feof(fread))	// getting all the names from the file
     {
+    	fscanf(fread, "%s%s", roll, hiphen);
+		fgets(name, sizeof(name), fread);
     	if(get_length(name) > max)	// finding max name length
 		{
 			max = get_length(name);
+			strcpy(maxname, name);
+			// printf("%s\n", maxname);
 		}
 		if(get_length(name) < min)	// finding min name length
 		{
 		 	min = get_length(name);
+		 	strcpy(minname, name);
+		 	// printf("%s\n",minname);
 		}
 		i++;
 	}
@@ -73,10 +64,11 @@ int main()
 	
 	
 	char names[i][50];
-
 	for(go = 0; go < i; go++)
 	{
+		fscanf(fread, "%s%s", roll, hiphen);
 		fgets(names[go], sizeof(names[go]), fread);	// storing the names in a array of strings
+		
 	}
 	
 	// sorting the array of strings using bubble sort
@@ -98,7 +90,8 @@ int main()
 		fprintf(fout, "\n");
 	}
 
-	fprintf(stdout,"Highest is :%d, Lowest is :%d\n",max,min);
+	printf("Highest is :%d, Lowest is :%d\n",max,min);
+	printf("Highest Name: %sLowest Name: %s\n", maxname, minname);
 	
 	fclose(fread);
 	fclose(fout);
